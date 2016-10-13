@@ -455,8 +455,18 @@ public class SimpleRefreshLayout extends FrameLayout {
      */
     public interface RefreshListener<T extends View>{
 
+        /**
+         * 下拉刷新
+         * @param view
+         * @param refreshView
+         */
         void onRefresh(View view, T refreshView);
 
+        /**
+         * 上拉加载更多
+         * @param view
+         * @param refreshView
+         */
         void onLoadMore(View view, T refreshView);
 
     }

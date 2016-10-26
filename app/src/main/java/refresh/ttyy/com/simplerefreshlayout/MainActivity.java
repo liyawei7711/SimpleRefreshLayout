@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
                 tv.setPadding(200,200,200,200);
                 convertView = tv;
             }
+            TextView tv = (TextView) convertView;
+            tv.setText(position+"");
 
             return convertView;
         }

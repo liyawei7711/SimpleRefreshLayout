@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -176,6 +177,7 @@ public class SimpleRefreshLayout extends FrameLayout {
      * 子View添加手势操作
      */
     GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             if (isRefreshing && distanceY > mTouchSlop) {
@@ -193,6 +195,7 @@ public class SimpleRefreshLayout extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (isRefreshing || isLoading || mChildView == null) {
+            // 控制避免同时可以上拉/下拉刷新
             return super.onTouchEvent(ev);
         }
 

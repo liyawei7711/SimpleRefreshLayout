@@ -407,7 +407,9 @@ public class SimpleRefreshLayout extends FrameLayout {
      * 开始刷新
      */
     public void startRefreshing(){
-        isLoading = true;
+         if(isLoading || isRefreshing || mChildView == null)
+            return;
+        
         if (!canChildScrollDown()) {
             // 触发下拉刷新
             state = PULL_DOWN_REFRESH;

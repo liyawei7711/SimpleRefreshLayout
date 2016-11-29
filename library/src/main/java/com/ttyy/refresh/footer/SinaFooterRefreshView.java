@@ -1,7 +1,7 @@
 package com.ttyy.refresh.footer;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
+import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -47,7 +47,7 @@ public class SinaFooterRefreshView extends FrameLayout implements IFooter {
         }
     }
 
-    public void setArrowResource(@DrawableRes int resId) {
+    public void setArrowResource( int resId) {
         refreshArrow.setImageResource(resId);
     }
 
@@ -85,6 +85,10 @@ public class SinaFooterRefreshView extends FrameLayout implements IFooter {
             refreshArrow.setRotation((1 - percentage * stdHeight / maxHeight) * 180);
             if(refreshArrow.getVisibility() == View.GONE){
                 refreshArrow.setVisibility(View.VISIBLE);
+
+                AnimationDrawable ad = (AnimationDrawable) loadingView.getDrawable();
+                ad.stop();
+
                 loadingView.setVisibility(View.GONE);
             }
         }
@@ -95,5 +99,8 @@ public class SinaFooterRefreshView extends FrameLayout implements IFooter {
         refreshTextView.setText(refreshingStr);
         refreshArrow.setVisibility(View.GONE);
         loadingView.setVisibility(View.VISIBLE);
+
+        AnimationDrawable ad = (AnimationDrawable) loadingView.getDrawable();
+        ad.start();
     }
 }

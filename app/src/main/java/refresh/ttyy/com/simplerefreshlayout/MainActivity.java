@@ -1,13 +1,17 @@
 package refresh.ttyy.com.simplerefreshlayout;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.ttyy.refresh.SimpleRefreshLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +24,15 @@ public class MainActivity extends AppCompatActivity {
 
         lv = (ListView) findViewById(R.id.lv);
         lv.setAdapter(new LVAdapter());
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("Test","Refresh");
+                SimpleRefreshLayout test = (SimpleRefreshLayout) findViewById(R.id.test);
+                test.startRefreshing();
+            }
+        },3000);
     }
 
     class LVAdapter extends BaseAdapter{

@@ -1,9 +1,8 @@
 package com.ttyy.refresh.header;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
+import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -46,7 +45,7 @@ public class SinaHeaderRefreshView extends FrameLayout implements IHeader {
         }
     }
 
-    public void setArrowResource(@DrawableRes int resId) {
+    public void setArrowResource(int resId) {
         refreshArrow.setImageResource(resId);
     }
 
@@ -84,6 +83,10 @@ public class SinaHeaderRefreshView extends FrameLayout implements IHeader {
             refreshArrow.setRotation(percentage * stdHeight / maxHeight * 180);
             if (refreshArrow.getVisibility() == GONE) {
                 refreshArrow.setVisibility(VISIBLE);
+
+                AnimationDrawable ad = (AnimationDrawable) loadingView.getDrawable();
+                ad.stop();
+
                 loadingView.setVisibility(GONE);
             }
         }
@@ -94,5 +97,8 @@ public class SinaHeaderRefreshView extends FrameLayout implements IHeader {
         refreshTextView.setText(refreshingStr);
         refreshArrow.setVisibility(GONE);
         loadingView.setVisibility(VISIBLE);
+
+        AnimationDrawable ad = (AnimationDrawable) loadingView.getDrawable();
+        ad.start();
     }
 }

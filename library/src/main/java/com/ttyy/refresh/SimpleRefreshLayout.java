@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -97,10 +96,9 @@ public class SimpleRefreshLayout extends FrameLayout {
         }
     }
 
-    // 相当于 Activity的onCreate
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    protected void onFinishInflate() {
+        super.onFinishInflate();
         if (mChildView == null) {
             mChildView = getChildAt(0);
         }
@@ -139,6 +137,12 @@ public class SimpleRefreshLayout extends FrameLayout {
                 return gestureDetector.onTouchEvent(event);
             }
         });
+    }
+
+    // 相当于 Activity的onCreate
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
     }
 
     // 相当于 Activity的onDestroy
@@ -370,7 +374,7 @@ public class SimpleRefreshLayout extends FrameLayout {
 
                     mHeaderLayout.getLayoutParams().height = height;
                     mHeaderLayout.requestLayout();
-                    if(mIHeader != null){
+                    if(mIHeader != null && !isRefreshing){
                         mIHeader.onPullingRelease((float) height / mHeaderRefreshHeight, mHeaderMaxHeight, mHeaderRefreshHeight);
                     }
 
@@ -378,7 +382,7 @@ public class SimpleRefreshLayout extends FrameLayout {
 
                     mFooterLayout.getLayoutParams().height = height;
                     mFooterLayout.requestLayout();
-                    if(mIFooter != null){
+                    if(mIFooter != null && !isLoading){
                         mIFooter.onPullingRelease((float) height / mFooterLoadingHeight, mFooterMaxHeight, mFooterLoadingHeight);
                     }
 
@@ -398,6 +402,37 @@ public class SimpleRefreshLayout extends FrameLayout {
             finishPullUpLoading();
         }
     }
+
+    /**
+     * 开始刷新
+     */
+    public void startRefreshing(){
+        isLoading = true;
+        if (!canChildScrollDown()) {
+            // 触发下拉刷新
+            state = PULL_DOWN_REFRESH;
+            isRefreshing = true;
+            animateChildView(mHeaderRefreshHeight);
+            if(mIHeader != null){
+                mIHeader.onRefreshing(mFooterMaxHeight, mFooterLoadingHeight);
+            }
+            if(mRefreshListener != null){
+                mRefreshListener.onRefresh(this, mChildView);
+            }
+        } else if (!canChildScrollUp() && isEnableLoadMore) {
+            // 触发上拉刷新
+            state = PULL_UP_LOAD;
+            isLoading = true;
+            animateChildView(-mFooterLoadingHeight);
+            if(mIFooter != null){
+                mIFooter.onLoading(mFooterMaxHeight, mFooterLoadingHeight);
+            }
+            if(mRefreshListener != null){
+                mRefreshListener.onLoadMore(this, mChildView);
+            }
+        }
+    }
+
 
     /**
      * 完成下拉刷新
